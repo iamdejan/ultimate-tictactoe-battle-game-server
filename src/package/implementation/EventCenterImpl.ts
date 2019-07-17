@@ -1,5 +1,5 @@
-import { IEventCenter } from "../interfaces/IEventCenter";
-import { IRoomEvent } from "../interfaces/IRoomEvent";
+import { IEventCenter } from "../interface/IEventCenter";
+import { IRoomEvent } from "../interface/IRoomEvent";
 
 class EventCenterImpl implements IEventCenter {
     public events: IRoomEvent[];
