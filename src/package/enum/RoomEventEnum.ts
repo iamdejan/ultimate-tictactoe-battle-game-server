@@ -1,7 +1,0 @@
-export enum RoomEventEnum {
-    JOIN_ROOM = "JOIN_ROOM",
-    LEAVE_ROOM = "LEAVE_ROOM",
-    GAME_START = "GAME_START",
-    MAKE_DECISION = "MAKE_DECISION",
-    GAME_ENDS = "GAME_ENDS",
-}
