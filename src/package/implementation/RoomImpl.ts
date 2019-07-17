@@ -1,6 +1,6 @@
-import { IEventCenter } from "../interfaces/IEventCenter";
-import { IPlayer } from "../interfaces/IPlayer";
-import { IRoom } from "../interfaces/IRoom";
+import { IEventCenter } from "../interface/IEventCenter";
+import { IPlayer } from "../interface/IPlayer";
+import { IRoom } from "../interface/IRoom";
 import { Position } from "../utilities/Position";
 
 const EMPTY: string = "-";
