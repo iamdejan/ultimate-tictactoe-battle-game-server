@@ -8,7 +8,7 @@ export class GameImpl implements IGame {
     private nextRoomID: number;
 
     constructor() {
-        this.rooms = new Map();
+        this.rooms = new Map<number, IRoom>();
         this.nextRoomID = 0;
     }
 
@@ -23,7 +23,11 @@ export class GameImpl implements IGame {
     }
 
     public getRoom(id: number): IRoom {
-        throw new Error("Method not implemented.");
+        const room = this.rooms.get(id);
+        if (room === undefined) {
+            throw new Error("Room is not found! Room ID: " + id);
+        }
+        return room;
     }
 
 }
