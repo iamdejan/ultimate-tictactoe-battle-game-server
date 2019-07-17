@@ -1,7 +1,6 @@
 import { IGame } from "../interface/IGame";
 import { IRoom } from "../interface/IRoom";
 
-import { EventCenterImpl } from "./EventCenterImpl";
 import { RoomImpl } from "./RoomImpl";
 
 export class GameImpl implements IGame {
