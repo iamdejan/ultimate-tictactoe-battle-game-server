@@ -1,7 +1,9 @@
 import { IEventCenter } from "../interface/IEventCenter";
 import { IPlayer } from "../interface/IPlayer";
 import { IRoom } from "../interface/IRoom";
+
 import { Position } from "../utilities/Position";
+import { EventCenterImpl } from "./EventCenterImpl";
 
 const EMPTY: string = "-";
 const PlayerX: string = "X";
@@ -9,21 +11,28 @@ const PlayerO: string = "O";
 
 const MAXIMUM_CAPACITY: number = 2;
 
-class RoomImpl implements IRoom {
+export class RoomImpl implements IRoom {
     public eventCenter: IEventCenter;
     private players: Set<IPlayer>;
+    private id: number;
 
     // board representation
     private globalBoard: string[][];
     private localBoard: string[][];
 
-    constructor(eventCenter: IEventCenter) {
+    constructor(id: number) {
         this.players = new Set<IPlayer>();
 
         this.globalBoard = this.generateEmptyBoard(3);
         this.localBoard = this.generateEmptyBoard(3 * 3);
 
-        this.eventCenter = eventCenter;
+        this.eventCenter = new EventCenterImpl();
+
+        this.id = id;
+    }
+
+    public getID(): number {
+        return this.id;
     }
 
     public getPlayers(): Set<IPlayer> {
