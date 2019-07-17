@@ -11,16 +11,16 @@ class RoomImpl implements IRoom {
     private capacity: number;
 
     // board representation
-    private grandBoard: string[][];
-    private detailedBoard: string[][];
+    private globalBoard: string[][];
+    private localBoard: string[][];
 
     constructor(capacity: number) {
         this.players = new Set<IPlayer>();
         this.capacity = capacity;
 
         // later
-        this.grandBoard = this.generateEmptyBoard(3);
-        this.detailedBoard = this.generateEmptyBoard(3 * 3);
+        this.globalBoard = this.generateEmptyBoard(3);
+        this.localBoard = this.generateEmptyBoard(3 * 3);
     }
 
     public getPlayers(): Set<IPlayer> {
