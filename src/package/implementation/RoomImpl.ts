@@ -4,6 +4,7 @@ import { IRoom } from "../interface/IRoom";
 
 import { Position } from "../utilities/Position";
 import { EventCenterImpl } from "./EventCenterImpl";
+import { PlayerImpl } from "./PlayerImpl";
 
 const EMPTY: string = "-";
 const PlayerX: string = "X";
@@ -12,6 +13,7 @@ const PlayerO: string = "O";
 const MAXIMUM_CAPACITY: number = 2;
 
 export class RoomImpl implements IRoom {
+
     public eventCenter: IEventCenter;
     private players: Set<IPlayer>;
     private id: number;
@@ -21,7 +23,7 @@ export class RoomImpl implements IRoom {
     private localBoard: string[][];
 
     constructor(id: number) {
-        this.players = new Set<IPlayer>();
+        this.players = new Set();
 
         this.globalBoard = this.generateEmptyBoard(3);
         this.localBoard = this.generateEmptyBoard(3 * 3);
@@ -43,7 +45,9 @@ export class RoomImpl implements IRoom {
         return this.isFull();
     }
 
-    public addNewPlayer(player: IPlayer): boolean {
+    public addNewPlayer(data: { id: number, name: string }): boolean {
+        const player: IPlayer = new PlayerImpl(data.id, data.name);
+
         if (this.isFull()) {
             return false;
         }
@@ -62,8 +66,8 @@ export class RoomImpl implements IRoom {
     }
 
     // TODO: to be implemented
-    public registerUserMark(playerID: number, position: Position): boolean {
-        return true;
+    public registerUserMark(playerID: number, positionData: { row: number; column: number; }): boolean {
+        throw new Error("Method not implemented.");
     }
 
     private generateEmptyBoard(dimension: number): string[][] {
@@ -82,6 +86,6 @@ export class RoomImpl implements IRoom {
     }
 
     private isFull() {
-        return this.players.size === MAXIMUM_CAPACITY;
+        return this.players.size == MAXIMUM_CAPACITY;
     }
 }

@@ -12,6 +12,10 @@ export function registerRoute(app: Express) {
     app.get("/rooms/create", (request, response) => {
         func.createRoom(request, response, game);
     });
+
+    app.post("/rooms/:roomID/join", (request, response) => {
+        func.joinRoom(request, response, game);
+    });
 }
 
 function registerDebugRoute(app: Express) {

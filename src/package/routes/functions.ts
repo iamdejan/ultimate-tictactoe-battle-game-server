@@ -16,3 +16,25 @@ export async function createRoom(request: Request, response: Response, game: IGa
     }
     response.json(result);
 }
+
+export async function joinRoom(request: Request, response: Response, game: IGame) {
+    const result: GeneralResponse = new GeneralResponse();
+    try {
+        const roomID = request.params.roomID;
+        const room: IRoom = game.getRoom(roomID);
+
+        const data: { id: number, name: string } = request.body;
+        room.addNewPlayer(data);
+        console.log(room.getPlayers());
+        result.result = {
+            id: roomID,
+            members: Array.from(room.getPlayers()),
+        };
+
+    } catch (error) {
+        result.result = {};
+        result.success = false;
+        result.message = error.message;
+    }
+    response.json(result);
+}

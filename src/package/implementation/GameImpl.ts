@@ -8,22 +8,24 @@ export class GameImpl implements IGame {
     private nextRoomID: number;
 
     constructor() {
-        this.rooms = new Map<number, IRoom>();
+        this.rooms = new Map();
         this.nextRoomID = 0;
     }
 
     public createRoom(): IRoom {
-        const roomID: number = this.nextRoomID + 1;
+        const roomID: number = ++this.nextRoomID;
 
         const room: RoomImpl = new RoomImpl(roomID);
-        this.rooms.set(room.getID(), room);
+        console.log();
+        this.rooms.set(roomID, room);
 
-        this.nextRoomID++;
         return room;
     }
 
     public getRoom(id: number): IRoom {
-        const room = this.rooms.get(id);
+        const roomID = Number.parseInt(id + "", 10);
+        console.log(this.rooms.has(roomID));
+        const room: IRoom | undefined = this.rooms.get(roomID);
         if (room === undefined) {
             throw new Error("Room is not found! Room ID: " + id);
         }

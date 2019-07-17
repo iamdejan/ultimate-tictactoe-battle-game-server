@@ -1,5 +1,19 @@
 import { IPlayer } from "../interface/IPlayer";
 
-class PlayerImpl implements IPlayer {
+export class PlayerImpl implements IPlayer {
+    private id: number;
+    private name: string;
 
+    constructor(id: number, name: string) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public getID(): number {
+        return this.id;
+    }
+
+    public getName(): string {
+        return this.name;
+    }
 }

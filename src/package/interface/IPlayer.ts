@@ -1,1 +1,4 @@
-export interface IPlayer {}
+export interface IPlayer {
+    getID(): number;
+    getName(): string;
+}
