@@ -35,7 +35,7 @@ class RoomImpl implements IRoom {
     }
 
     public addNewPlayer(player: IPlayer): boolean {
-        if (this.doesGameStart()) {
+        if (this.isFull()) {
             return false;
         }
 
