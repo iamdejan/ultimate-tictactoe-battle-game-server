@@ -1,4 +1,4 @@
-import {IEventCenter} from "../interfaces/IEventCenter";
+import { IEventCenter } from "../interfaces/IEventCenter";
 import { IPlayer } from "../interfaces/IPlayer";
 import { IRoom } from "../interfaces/IRoom";
 import { Position } from "../utilities/Position";
