@@ -1,3 +1,5 @@
+import { RoomEventTypeEnum } from "../enum/RoomEventTypeEnum";
+
 export interface IRoomEvent {
-    getType(): string;
+    type: RoomEventTypeEnum;
 }
