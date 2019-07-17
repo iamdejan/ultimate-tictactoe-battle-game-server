@@ -1,5 +1,5 @@
-import { IPlayer } from "../interfaces/Player";
-import { IRoom } from "../interfaces/Room";
+import { IPlayer } from "../interfaces/IPlayer";
+import { IRoom } from "../interfaces/IRoom";
 import { Position } from "../utilities/Position";
 
 const EMPTY: string = "-";
