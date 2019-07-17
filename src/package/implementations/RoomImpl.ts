@@ -1,26 +1,25 @@
-import { IPlayer } from "../interfaces/Player";
-import { IRoom } from "../interfaces/Room";
+import { IPlayer } from "../interfaces/IPlayer";
+import { IRoom } from "../interfaces/IRoom";
 import { Position } from "../utilities/Position";
 
 const EMPTY: string = "-";
 const PlayerX: string = "X";
 const PlayerO: string = "O";
 
+const MAXIMUM_CAPACITY: number = 2;
+
 class RoomImpl implements IRoom {
     private players: Set<IPlayer>;
-    private capacity: number;
 
     // board representation
-    private grandBoard: string[][];
-    private detailedBoard: string[][];
+    private globalBoard: string[][];
+    private localBoard: string[][];
 
-    constructor(capacity: number) {
+    constructor() {
         this.players = new Set<IPlayer>();
-        this.capacity = capacity;
 
-        // later
-        this.grandBoard = this.generateEmptyBoard(3);
-        this.detailedBoard = this.generateEmptyBoard(3 * 3);
+        this.globalBoard = this.generateEmptyBoard(3);
+        this.localBoard = this.generateEmptyBoard(3 * 3);
     }
 
     public getPlayers(): Set<IPlayer> {
@@ -72,6 +71,6 @@ class RoomImpl implements IRoom {
     }
 
     private isFull() {
-        return this.players.size === this.capacity;
+        return this.players.size === MAXIMUM_CAPACITY;
     }
 }

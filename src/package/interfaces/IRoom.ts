@@ -1,5 +1,5 @@
 import { Position } from "../utilities/Position";
-import { IPlayer } from "./Player";
+import { IPlayer } from "./IPlayer";
 
 export interface IRoom {
     getPlayers(): IPlayer;
