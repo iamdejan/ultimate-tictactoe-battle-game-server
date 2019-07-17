@@ -1,22 +1,8 @@
 import { Express, Request, Response } from "express";
+import { IGame } from "../interface/IGame";
+import { IRoom } from "../interface/IRoom";
 
-export async function helloWorld(request: Request, response: Response) {
-    response.send(JSON.stringify({
-        message: "Hello world",
-    }));
-}
-
-export async function showID(request: Request, response: Response) {
-    response.send(request.params);
-}
-
-export async function showIDAndName(request: Request, response: Response) {
-    response.send(JSON.stringify({
-        id: request.params.id,
-        name: request.params.name,
-    }));
-}
-
-export async function showNameFromBody(request: Request, response: Response) {
-    response.send(request.body);
+export async function createRoom(request: Request, response: Response, game: IGame) {
+    const room: IRoom = game.createRoom();
+    response.json(JSON.stringify(room));
 }

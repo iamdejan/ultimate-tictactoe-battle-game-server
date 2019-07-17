@@ -5,6 +5,7 @@ import { IPlayer } from "./IPlayer";
 export interface IRoom {
     eventCenter: IEventCenter;
 
+    getID(): number;
     getPlayers(): IPlayer;
     addNewPlayer(player: IPlayer): boolean;
     doesGameStart(): boolean;
