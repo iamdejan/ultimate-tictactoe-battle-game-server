@@ -6,19 +6,18 @@ const EMPTY: string = "-";
 const PlayerX: string = "X";
 const PlayerO: string = "O";
 
+const MAXIMUM_CAPACITY: number = 2;
+
 class RoomImpl implements IRoom {
     private players: Set<IPlayer>;
-    private capacity: number;
 
     // board representation
     private globalBoard: string[][];
     private localBoard: string[][];
 
-    constructor(capacity: number) {
+    constructor() {
         this.players = new Set<IPlayer>();
-        this.capacity = capacity;
 
-        // later
         this.globalBoard = this.generateEmptyBoard(3);
         this.localBoard = this.generateEmptyBoard(3 * 3);
     }
@@ -72,6 +71,6 @@ class RoomImpl implements IRoom {
     }
 
     private isFull() {
-        return this.players.size === this.capacity;
+        return this.players.size === MAXIMUM_CAPACITY;
     }
 }
