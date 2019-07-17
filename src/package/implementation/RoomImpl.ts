@@ -70,16 +70,14 @@ export class RoomImpl implements IRoom {
         if (dimension <= 0) {
             throw new Error("Dimension is not valid! Dimension: " + dimension);
         }
-
         const board: string[][] = [];
         for (let i = 0; i < dimension; i++) {
             const row: string[] = [];
-            for (let j = 0; i < dimension; j++) {
+            for (let j = 0; j < dimension; j++) {
                 row.push(EMPTY);
             }
             board.push(row);
         }
-
         return board;
     }
 
