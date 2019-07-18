@@ -38,9 +38,14 @@ export async function joinRoom(request: Request, response: Response, game: IGame
     response.json(result);
 }
 
+async function delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function untilEventExists(room: IRoom, lastID: number) {
     let data = room.eventCenter.getList(lastID);
     while (data.events.length < 1) {
+        await delay(50);
         data = room.eventCenter.getList(lastID);
     }
 
