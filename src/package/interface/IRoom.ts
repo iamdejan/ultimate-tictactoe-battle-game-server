@@ -6,8 +6,9 @@ export interface IRoom {
     eventCenter: IEventCenter;
 
     getID(): number;
-    getPlayers(): Set<IPlayer>;
+    getPlayers(): Map<number, IPlayer>;
     addNewPlayer(data: { id: number, name: string }): void;
+    removePlayer(playerID: number): void;
     doesGameStart(): boolean;
     registerUserMark(playerID: number, positionData: { row: number, column: number }): boolean;
 }

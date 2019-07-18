@@ -9,15 +9,19 @@ export function registerRoute(app: Express) {
 
     const game: IGame = new GameImpl();
 
-    app.get("/rooms/create", (request, response) => {
+    app.get("/room/create", (request, response) => {
         func.createRoom(request, response, game);
     });
 
-    app.post("/rooms/:roomID/join", (request, response) => {
+    app.post("/room/:roomID/join", (request, response) => {
         func.joinRoom(request, response, game);
     });
 
-    app.get("/rooms/:roomID/events/:lastID", (request, response) => {
+    app.delete("/room/:roomID/player/:playerID/leave", (request, response) => {
+        func.leaveRoom(request, response, game);
+    });
+
+    app.get("/room/:roomID/events/:lastID", (request, response) => {
         func.getRoomEventList(request, response, game);
     });
 }

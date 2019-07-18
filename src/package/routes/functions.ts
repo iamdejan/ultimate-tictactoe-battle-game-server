@@ -33,7 +33,23 @@ export async function joinRoom(request: Request, response: Response, game: IGame
         result.success = false;
         result.message = error.message;
 
-        response.statusCode = 403;
+        response.statusCode = 500;
+    }
+    response.json(result);
+}
+
+export async function leaveRoom(request: Request, response: Response, game: IGame) {
+    const result: GeneralResponse = new GeneralResponse();
+    try {
+        const roomID = request.params.roomID;
+        const room: IRoom = game.getRoom(roomID);
+
+        const playerID = request.params.playerID;
+        room.removePlayer(playerID);
+
+        result.success = true;
+    } catch (error) {
+        response.statusCode = 500;
     }
     response.json(result);
 }
