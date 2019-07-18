@@ -17,5 +17,5 @@ app.listen(port, (error) => {
         return console.error(error);
     }
 
-    return console.log("Server is listening at port ", 3000);
+    return console.log("Server is listening at port", 3000);
 });

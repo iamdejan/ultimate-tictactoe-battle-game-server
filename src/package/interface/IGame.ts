@@ -1,7 +1,7 @@
 import { IRoom } from "./IRoom";
 
 export interface IGame {
-    createRoom(): boolean;
+    createRoom(): IRoom;
 
     getRoom(id: number): IRoom;
 
