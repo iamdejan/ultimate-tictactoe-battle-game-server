@@ -17,7 +17,7 @@ const MAXIMUM_CAPACITY: number = 2;
 export class RoomImpl implements IRoom {
 
     public eventCenter: IEventCenter;
-    private players: Set<IPlayer>;
+    private players: Map<number, IPlayer>;
     private id: number;
 
     // board representation
@@ -25,7 +25,7 @@ export class RoomImpl implements IRoom {
     private localBoard: string[][];
 
     constructor(id: number) {
-        this.players = new Set();
+        this.players = new Map();
 
         this.globalBoard = this.generateEmptyBoard(3);
         this.localBoard = this.generateEmptyBoard(3 * 3);
@@ -39,7 +39,7 @@ export class RoomImpl implements IRoom {
         return this.id;
     }
 
-    public getPlayers(): Set<IPlayer> {
+    public getPlayers(): Map<number, IPlayer> {
         return this.players;
     }
 
@@ -54,7 +54,7 @@ export class RoomImpl implements IRoom {
             throw new Error("Room is full");
         }
 
-        this.players.add(player);
+        this.players.set(data.id, player);
         this.eventCenter.put(builder.buildJoinRoomEvent(player));
 
         if (this.isFull()) {
@@ -63,13 +63,23 @@ export class RoomImpl implements IRoom {
 
     }
 
-    public removePlayer(player: IPlayer): void {
+    public removePlayer(playerID: number): void {
+        playerID = Number.parseInt(playerID + "", 10);
         if (this.doesGameStart()) {
             throw new Error("Game already starts!");
         }
 
-        this.players.delete(player);
+        const player = this.players.get(playerID);
+        if (player === undefined) {
+            throw new Error("Player isn't found!");
+        }
+
+        this.players.delete(playerID);
         this.eventCenter.put(builder.buildLeaveRoomEvent(player));
+
+        if (this.isEmpty()) {
+            // TODO: implement automatic delete room
+        }
     }
 
     // TODO: to be implemented
@@ -90,6 +100,10 @@ export class RoomImpl implements IRoom {
             board.push(row);
         }
         return board;
+    }
+
+    private isEmpty() {
+        return this.players.size === 0;
     }
 
     private isFull() {
