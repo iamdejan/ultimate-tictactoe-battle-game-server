@@ -6,6 +6,8 @@ import { Position } from "../utilities/Position";
 import { EventCenterImpl } from "./EventCenterImpl";
 import { PlayerImpl } from "./PlayerImpl";
 
+import * as builder from "../event/builder";
+
 const EMPTY: string = "-";
 const PlayerX: string = "X";
 const PlayerO: string = "O";
@@ -45,24 +47,29 @@ export class RoomImpl implements IRoom {
         return this.isFull();
     }
 
-    public addNewPlayer(data: { id: number, name: string }): boolean {
+    public addNewPlayer(data: { id: number, name: string }): void {
         const player: IPlayer = new PlayerImpl(data.id, data.name);
 
         if (this.isFull()) {
-            return false;
+            throw new Error("Room is full");
         }
 
         this.players.add(player);
-        return true;
+        this.eventCenter.put(builder.buildJoinRoomEvent(player));
+
+        if (this.isFull()) {
+            this.startGame();
+        }
+
     }
 
-    public removePlayer(player: IPlayer): boolean {
+    public removePlayer(player: IPlayer): void {
         if (this.doesGameStart()) {
-            return false;
+            throw new Error("Game already starts!");
         }
 
         this.players.delete(player);
-        return true;
+        this.eventCenter.put(builder.buildLeaveRoomEvent(player));
     }
 
     // TODO: to be implemented
@@ -86,6 +93,10 @@ export class RoomImpl implements IRoom {
     }
 
     private isFull() {
-        return this.players.size == MAXIMUM_CAPACITY;
+        return this.players.size === MAXIMUM_CAPACITY;
+    }
+
+    private startGame() {
+        this.eventCenter.put(builder.buildGameBeginEvent());
     }
 }

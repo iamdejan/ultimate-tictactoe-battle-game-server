@@ -7,7 +7,7 @@ export interface IRoom {
 
     getID(): number;
     getPlayers(): Set<IPlayer>;
-    addNewPlayer(data: { id: number, name: string }): boolean;
+    addNewPlayer(data: { id: number, name: string }): void;
     doesGameStart(): boolean;
     registerUserMark(playerID: number, positionData: { row: number, column: number }): boolean;
 }
