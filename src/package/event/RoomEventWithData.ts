@@ -3,9 +3,9 @@ import { RoomEventTypeEnum } from "../enum/RoomEventTypeEnum";
 
 export class RoomEventWithData implements IRoomEvent {
     public type: RoomEventTypeEnum;
-    public data: {};
+    public DTO: {};
     constructor(eventCode: RoomEventTypeEnum, data: {}) {
-        this.data = data;
+        this.DTO = data;
         this.type = eventCode;
     }
 }
