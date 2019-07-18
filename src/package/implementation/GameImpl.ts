@@ -14,9 +14,7 @@ export class GameImpl implements IGame {
 
     public createRoom(): IRoom {
         const roomID: number = ++this.nextRoomID;
-
         const room: RoomImpl = new RoomImpl(roomID);
-        console.log();
         this.rooms.set(roomID, room);
 
         return room;
@@ -24,7 +22,6 @@ export class GameImpl implements IGame {
 
     public getRoom(id: number): IRoom {
         const roomID = Number.parseInt(id + "", 10);
-        console.log(this.rooms.has(roomID));
         const room: IRoom | undefined = this.rooms.get(roomID);
         if (room === undefined) {
             throw new Error("Room is not found! Room ID: " + id);
