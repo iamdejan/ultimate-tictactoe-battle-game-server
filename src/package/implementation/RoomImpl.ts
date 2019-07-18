@@ -4,6 +4,9 @@ import { IRoom } from "../interface/IRoom";
 
 import { Position } from "../utilities/Position";
 import { EventCenterImpl } from "./EventCenterImpl";
+import { PlayerImpl } from "./PlayerImpl";
+
+import * as builder from "../event/builder";
 
 const EMPTY: string = "-";
 const PlayerX: string = "X";
@@ -12,6 +15,7 @@ const PlayerO: string = "O";
 const MAXIMUM_CAPACITY: number = 2;
 
 export class RoomImpl implements IRoom {
+
     public eventCenter: IEventCenter;
     private players: Set<IPlayer>;
     private id: number;
@@ -21,7 +25,7 @@ export class RoomImpl implements IRoom {
     private localBoard: string[][];
 
     constructor(id: number) {
-        this.players = new Set<IPlayer>();
+        this.players = new Set();
 
         this.globalBoard = this.generateEmptyBoard(3);
         this.localBoard = this.generateEmptyBoard(3 * 3);
@@ -43,27 +47,34 @@ export class RoomImpl implements IRoom {
         return this.isFull();
     }
 
-    public addNewPlayer(player: IPlayer): boolean {
+    public addNewPlayer(data: { id: number, name: string }): void {
+        const player: IPlayer = new PlayerImpl(data.id, data.name);
+
         if (this.isFull()) {
-            return false;
+            throw new Error("Room is full");
         }
 
         this.players.add(player);
-        return true;
+        this.eventCenter.put(builder.buildJoinRoomEvent(player));
+
+        if (this.isFull()) {
+            this.startGame();
+        }
+
     }
 
-    public removePlayer(player: IPlayer): boolean {
+    public removePlayer(player: IPlayer): void {
         if (this.doesGameStart()) {
-            return false;
+            throw new Error("Game already starts!");
         }
 
         this.players.delete(player);
-        return true;
+        this.eventCenter.put(builder.buildLeaveRoomEvent(player));
     }
 
     // TODO: to be implemented
-    public registerUserMark(playerID: number, position: Position): boolean {
-        return true;
+    public registerUserMark(playerID: number, positionData: { row: number; column: number; }): boolean {
+        throw new Error("Method not implemented.");
     }
 
     private generateEmptyBoard(dimension: number): string[][] {
@@ -83,5 +94,9 @@ export class RoomImpl implements IRoom {
 
     private isFull() {
         return this.players.size === MAXIMUM_CAPACITY;
+    }
+
+    private startGame() {
+        this.eventCenter.put(builder.buildGameBeginEvent());
     }
 }
