@@ -38,11 +38,26 @@ export async function joinRoom(request: Request, response: Response, game: IGame
     response.json(result);
 }
 
+async function delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function untilEventExists(room: IRoom, lastID: number) {
+    let data = room.eventCenter.getList(lastID);
+    while (data.events.length < 1) {
+        await delay(50);
+        data = room.eventCenter.getList(lastID);
+    }
+
+    return data;
+}
+
 export async function getRoomEventList(request: Request, response: Response, game: IGame) {
     const result: GeneralResponse = new GeneralResponse();
     try {
         const room: IRoom = game.getRoom(request.params.roomID);
-        result.result = room.eventCenter.getList(request.params.lastID);
+        const data = await untilEventExists(room, request.params.lastID);
+        result.result = data;
         result.success = true;
     } catch (error) {
         result.result = {};
