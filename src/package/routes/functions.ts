@@ -25,16 +25,31 @@ export async function joinRoom(request: Request, response: Response, game: IGame
 
         const data: { id: number, name: string } = request.body;
         room.addNewPlayer(data);
-        console.log(room.getPlayers());
-        result.result = {
-            id: roomID,
-            members: Array.from(room.getPlayers()),
-        };
+        result.result = {};
+        result.success = true;
 
     } catch (error) {
         result.result = {};
         result.success = false;
         result.message = error.message;
+
+        response.statusCode = 403;
+    }
+    response.json(result);
+}
+
+export async function getRoomEventList(request: Request, response: Response, game: IGame) {
+    const result: GeneralResponse = new GeneralResponse();
+    try {
+        const room: IRoom = game.getRoom(request.params.roomID);
+        result.result = room.eventCenter.getList(request.params.lastID);
+        result.success = true;
+    } catch (error) {
+        result.result = {};
+        result.success = false;
+        result.message = error.message;
+
+        response.statusCode = 403;
     }
     response.json(result);
 }

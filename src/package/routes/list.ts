@@ -16,6 +16,10 @@ export function registerRoute(app: Express) {
     app.post("/rooms/:roomID/join", (request, response) => {
         func.joinRoom(request, response, game);
     });
+
+    app.get("/rooms/:roomID/events/:lastID", (request, response) => {
+        func.getRoomEventList(request, response, game);
+    });
 }
 
 function registerDebugRoute(app: Express) {
