@@ -2,11 +2,12 @@ import { IEventCenter } from "../interface/IEventCenter";
 import { IPlayer } from "../interface/IPlayer";
 import { IRoom } from "../interface/IRoom";
 
-import { Position } from "../utilities/Position";
 import { EventCenterImpl } from "./EventCenterImpl";
 import { PlayerImpl } from "./PlayerImpl";
 
 import * as builder from "../event/builder";
+import { CustomError } from "../utilities/CustomError";
+import { Position } from "../utilities/Position";
 
 const EMPTY: string = "-";
 const PlayerX: string = "X";
@@ -51,7 +52,7 @@ export class RoomImpl implements IRoom {
         const player: IPlayer = new PlayerImpl(data.id, data.name);
 
         if (this.isFull()) {
-            throw new Error("Room is full");
+            throw new CustomError("Room is full", 403);
         }
 
         this.players.set(data.id, player);
@@ -66,30 +67,26 @@ export class RoomImpl implements IRoom {
     public removePlayer(playerID: number): void {
         playerID = Number.parseInt(playerID + "", 10);
         if (this.doesGameStart()) {
-            throw new Error("Game already starts!");
+            throw new CustomError("Game already starts!", 403);
         }
 
         const player = this.players.get(playerID);
         if (player === undefined) {
-            throw new Error("Player isn't found!");
+            throw new CustomError("Player isn't found!", 404);
         }
 
         this.players.delete(playerID);
         this.eventCenter.put(builder.buildLeaveRoomEvent(player));
-
-        if (this.isEmpty()) {
-            // TODO: implement automatic delete room
-        }
     }
 
     // TODO: to be implemented
     public registerUserMark(playerID: number, positionData: { row: number; column: number; }): boolean {
-        throw new Error("Method not implemented.");
+        throw new CustomError("Method not implemented.", 500);
     }
 
     private generateEmptyBoard(dimension: number): string[][] {
         if (dimension <= 0) {
-            throw new Error("Dimension is not valid! Dimension: " + dimension);
+            throw new CustomError("Dimension is not valid! Dimension: " + dimension, 500);
         }
         const board: string[][] = [];
         for (let i = 0; i < dimension; i++) {
