@@ -1,7 +1,8 @@
-import { Express, Request, Response } from "express";
+import { Request, Response } from "express";
 import { IGame } from "../interface/IGame";
 import { IRoom } from "../interface/IRoom";
 import { GeneralResponse } from "../utilities/GeneralResponse";
+import { CustomError } from "../utilities/CustomError";
 
 export async function createRoom(request: Request, response: Response, game: IGame) {
     const result: GeneralResponse = new GeneralResponse();
@@ -13,6 +14,10 @@ export async function createRoom(request: Request, response: Response, game: IGa
         result.result = {};
         result.success = false;
         result.message = error.message;
+
+        if (error instanceof CustomError) {
+            response.statusCode = error.statusCode;
+        }
     }
     response.json(result);
 }
@@ -33,7 +38,9 @@ export async function joinRoom(request: Request, response: Response, game: IGame
         result.success = false;
         result.message = error.message;
 
-        response.statusCode = 500;
+        if (error instanceof CustomError) {
+            response.statusCode = error.statusCode;
+        }
     }
     response.json(result);
 }
@@ -49,19 +56,25 @@ export async function leaveRoom(request: Request, response: Response, game: IGam
 
         result.success = true;
     } catch (error) {
-        response.statusCode = 500;
+        result.result = {};
+        result.success = false;
+        result.message = error.message;
+
+        if (error instanceof CustomError) {
+            response.statusCode = error.statusCode;
+        }
     }
     response.json(result);
 }
 
-async function delay(ms: number): Promise<void> {
+async function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function untilEventExists(room: IRoom, lastID: number) {
     let data = room.eventCenter.getList(lastID);
     while (data.events.length < 1) {
-        await delay(50);
+        await delay(20);
         data = room.eventCenter.getList(lastID);
     }
 
@@ -80,7 +93,9 @@ export async function getRoomEventList(request: Request, response: Response, gam
         result.success = false;
         result.message = error.message;
 
-        response.statusCode = 403;
+        if (error instanceof CustomError) {
+            response.statusCode = error.statusCode;
+        }
     }
     response.json(result);
 }
