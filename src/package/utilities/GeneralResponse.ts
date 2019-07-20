@@ -1,11 +1,11 @@
 export class GeneralResponse {
     public success: boolean;
-    public result: {};
+    public DTO: {};
     public message: string;
 
     constructor() {
         this.success = false;
-        this.result = {};
+        this.DTO = {};
         this.message = "";
     }
 }

@@ -8,10 +8,12 @@ export async function createRoom(request: Request, response: Response, game: IGa
     const result: GeneralResponse = new GeneralResponse();
     try {
         const room: IRoom = game.createRoom();
-        result.result = room;
+        result.DTO = {
+            id: room.getID(),
+        };
         result.success = true;
     } catch (error) {
-        result.result = {};
+        result.DTO = {};
         result.success = false;
         result.message = error.message;
 
@@ -30,11 +32,11 @@ export async function joinRoom(request: Request, response: Response, game: IGame
 
         const data: { id: number, name: string } = request.body;
         room.addNewPlayer(data);
-        result.result = {};
+        result.DTO = {};
         result.success = true;
 
     } catch (error) {
-        result.result = {};
+        result.DTO = {};
         result.success = false;
         result.message = error.message;
 
@@ -56,7 +58,7 @@ export async function leaveRoom(request: Request, response: Response, game: IGam
 
         result.success = true;
     } catch (error) {
-        result.result = {};
+        result.DTO = {};
         result.success = false;
         result.message = error.message;
 
@@ -86,10 +88,10 @@ export async function getRoomEventList(request: Request, response: Response, gam
     try {
         const room: IRoom = game.getRoom(request.params.roomID);
         const data = await untilEventExists(room, request.params.lastID);
-        result.result = data;
+        result.DTO = data;
         result.success = true;
     } catch (error) {
-        result.result = {};
+        result.DTO = {};
         result.success = false;
         result.message = error.message;
 
