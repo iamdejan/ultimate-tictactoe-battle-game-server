@@ -2,7 +2,7 @@
     "name": "ultimate-tictactoe-battle-game-server",
     "version": "1.0.0",
     "description": "",
-    "main": "dist/app.js",
+    "main": "dist/server/app.js",
     "scripts": {
         "start": "tsc --strict && node dist/server/app.js",
         "test": "tsc --strict && ava"
