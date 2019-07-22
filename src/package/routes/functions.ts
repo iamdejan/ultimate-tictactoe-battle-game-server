@@ -101,3 +101,25 @@ export async function getRoomEventList(request: Request, response: Response, gam
     }
     response.json(result);
 }
+
+export async function recordPlayerMove(request: Request, response: Response, game: IGame) {
+    const result: GeneralResponse = new GeneralResponse();
+    try {
+        const room: IRoom = game.getRoom(request.params.roomID);
+        const data: { row: number, column: number } = request.body;
+        const playerID = request.params.playerID;
+        room.registerUserMove(playerID, data);
+
+        result.success = true;
+        result.DTO = {};
+    } catch (error) {
+        result.success = false;
+        result.DTO = {};
+        result.message = error.message;
+
+        if (error instanceof CustomError) {
+            response.statusCode = error.statusCode;
+        }
+    }
+    response.json(result);
+}
