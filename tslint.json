@@ -8,7 +8,9 @@
         "no-console": false,
         "no-bitwise": false,
         "no-any": true,
-        "ordered-imports": false
+        "ordered-imports": false,
+        "max-line-length": false,
+        "object-literal-shorthand": false
     },
     "rulesDirectory": []
 }
