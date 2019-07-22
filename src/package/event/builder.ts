@@ -50,3 +50,12 @@ export function buildWinLocalBoardGameEvent(playerSign: string, globalPosition: 
         playerSign: playerSign,
     });
 }
+
+export function buildGameEndEvent(player: IPlayer): RoomEventWithData {
+    return new RoomEventWithData(RoomEventTypeEnum.GAME_ENDS, {
+        winner: {
+            playerID: player.getID(),
+            playerSign: player.sign,
+        },
+    });
+}
