@@ -15,7 +15,7 @@ const MAXIMUM_CAPACITY: number = 2;
 export class RoomImpl implements IRoom {
 
     public eventCenter: IEventCenter;
-    private players: Map<number, IPlayer>;
+    private players: Map<string, IPlayer>;
     private id: number;
 
     // board representation
@@ -48,7 +48,7 @@ export class RoomImpl implements IRoom {
         } else {
             player.sign = "O";
         }
-        this.players.set(data.id, player);
+        this.players.set(player.sign, player);
         this.eventCenter.put(builder.buildJoinRoomEvent(player));
 
         if (this.isFull()) {
@@ -57,48 +57,51 @@ export class RoomImpl implements IRoom {
 
     }
 
-    public removePlayer(playerID: number): void {
-        playerID = Number.parseInt(playerID + "", 10);
+    public removePlayer(playerSign: string): void {
         if (this.doesGameStart()) {
             throw new CustomError("Game already starts!", 403);
         }
 
-        const player = this.players.get(playerID);
+        const player = this.players.get(playerSign);
         if (player === undefined) {
             throw new CustomError("Player isn't found!", 404);
         }
 
-        this.players.delete(playerID);
+        this.players.delete(playerSign);
         this.eventCenter.put(builder.buildLeaveRoomEvent(player));
     }
 
-    public registerUserMove(playerID: number, positionData: { row: number, column: number }): void {
-        playerID = Number.parseInt(playerID + "", 10);
-        if (this.players.has(playerID) !== true) {
+    public registerUserMove(playerSign: string, positionData: { row: number, column: number }): void {
+        if (this.players.has(playerSign) !== true) {
             throw new CustomError("Player is not found!", 404);
         }
 
         const position: Position = new Position(positionData);
 
-        if (this.isValidPosition(playerID, position)) {
-            this.move(playerID, position);
-        } else {
-            this.eventCenter.put(builder.buildInvalidMoveGameEvent(playerID, position));
+        if (this.isValidPosition(position) !== true) {
+            this.eventCenter.put(builder.buildInvalidMoveGameEvent(playerSign, position));
             return;
         }
 
+        this.move(playerSign, position);
         this.evaluateLocalBoard(position);
     }
 
-    private move(playerID: number, position: Position): void {
-        this.eventCenter.put(builder.buildValidMoveGameEvent(playerID, position));
-
+    private move(playerSign: string, position: Position): void {
         const row = Number.parseInt(position.row + "", 10);
         const column = Number.parseInt(position.column + "", 10);
 
-        const player = this.players.get(playerID);
+        const player = this.players.get(playerSign);
         if (player !== undefined) {
             this.localBoard[row][column] = player.sign + "";
+            let nextPlayerSign: string = EMPTY;
+            if (playerSign === "X") {
+                nextPlayerSign = "O";
+            } else if (playerSign === "O") {
+                nextPlayerSign = "X";
+            }
+
+            this.eventCenter.put(builder.buildValidMoveGameEvent(playerSign, position, nextPlayerSign));
         }
     }
 
@@ -126,30 +129,25 @@ export class RoomImpl implements IRoom {
                 (this.localBoard[row - 1][column + 1] === this.localBoard[row][column] && this.localBoard[row][column] === this.localBoard[row + 1][column - 1]);
     }
 
-    private decideWinnerOnLocalBoard(center: Position): number {
+    private decideWinnerOnLocalBoard(center: Position): string {
         if (this.isWinningCondition(center)) {
             const row = center.row;
             const column = center.column;
             if (this.localBoard[row][column] === EMPTY) {
-                return 0;
+                return EMPTY;
             } else {
-                let winnerID: number = 0;
-                this.players.forEach(((value, key) => {
-                    if (this.localBoard[row][column] === value.sign) {
-                        winnerID = key;
-                    }
-                }));
-                return winnerID;
+                const winnerSign: string = this.localBoard[row][column];
+                return winnerSign;
             }
         }
-        return 0;
+        return EMPTY;
     }
 
     private evaluateLocalBoard(position: Position) {
         const center: Position = this.findCenter(position);
 
-        const winnerID = this.decideWinnerOnLocalBoard(center);
-        if (winnerID !== 0) {
+        const winnerSign = this.decideWinnerOnLocalBoard(center);
+        if (winnerSign !== EMPTY) {
             const globalPosition: Position = center.clone();
             globalPosition.row--;
             globalPosition.row /= 3;
@@ -157,17 +155,16 @@ export class RoomImpl implements IRoom {
             globalPosition.column--;
             globalPosition.column /= 3;
 
-            const player = this.players.get(winnerID);
-            if (player !== undefined) {
-                this.globalBoard[globalPosition.row][globalPosition.column] = player.sign;
-                this.eventCenter.put(builder.buildWinLocalBoardGameEvent(winnerID, player.sign, globalPosition));
+            if (this.players.has(winnerSign)) {
+                this.globalBoard[globalPosition.row][globalPosition.column] = winnerSign;
+                this.eventCenter.put(builder.buildWinLocalBoardGameEvent(winnerSign, globalPosition));
 
                 // TODO: check global board
             }
         }
     }
 
-    private isValidPosition(playerID: number, position: Position): boolean {
+    private isValidPosition(position: Position): boolean {
         const row = Number.parseInt(position.row + "", 10);
         const column = Number.parseInt(position.column + "", 10);
         return this.localBoard[row][column] === EMPTY;

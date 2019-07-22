@@ -5,6 +5,6 @@ export interface IRoom {
 
     getID(): number;
     addNewPlayer(data: { id: number, name: string }): void;
-    removePlayer(playerID: number): void;
-    registerUserMove(playerID: number, positionData: { row: number, column: number }): void;
+    removePlayer(playerSign: string): void;
+    registerUserMove(playerSign: string, positionData: { row: number, column: number }): void;
 }
