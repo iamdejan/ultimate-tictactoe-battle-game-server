@@ -13,7 +13,6 @@ export async function createRoom(request: Request, response: Response, game: IGa
         };
         result.success = true;
     } catch (error) {
-        result.DTO = {};
         result.success = false;
         result.message = error.message;
 
@@ -32,9 +31,8 @@ export async function joinRoom(request: Request, response: Response, game: IGame
 
         const data: { id: number, name: string } = request.body;
         room.addNewPlayer(data);
-        result.DTO = {};
-        result.success = true;
 
+        result.success = true;
     } catch (error) {
         result.DTO = {};
         result.success = false;
@@ -53,12 +51,11 @@ export async function leaveRoom(request: Request, response: Response, game: IGam
         const roomID = request.params.roomID;
         const room: IRoom = game.getRoom(roomID);
 
-        const playerID = request.params.playerID;
-        room.removePlayer(playerID);
+        const playerSign = request.params.playerSign;
+        room.removePlayer(playerSign);
 
         result.success = true;
     } catch (error) {
-        result.DTO = {};
         result.success = false;
         result.message = error.message;
 
@@ -107,8 +104,8 @@ export async function recordPlayerMove(request: Request, response: Response, gam
     try {
         const room: IRoom = game.getRoom(request.params.roomID);
         const data: { row: number, column: number } = request.body;
-        const playerID = request.params.playerID;
-        room.registerUserMove(playerID, data);
+        const playerSign = request.params.playerSign;
+        room.registerUserMove(playerSign, data);
 
         result.success = true;
         result.DTO = {};

@@ -94,15 +94,20 @@ export class RoomImpl implements IRoom {
         const player = this.players.get(playerSign);
         if (player !== undefined) {
             this.localBoard[row][column] = player.sign + "";
-            let nextPlayerSign: string = EMPTY;
-            if (playerSign === "X") {
-                nextPlayerSign = "O";
-            } else if (playerSign === "O") {
-                nextPlayerSign = "X";
-            }
+            const nextPlayerSign = this.decideNextPlayerToMove(playerSign);
 
             this.eventCenter.put(builder.buildValidMoveGameEvent(playerSign, position, nextPlayerSign));
         }
+    }
+
+    private decideNextPlayerToMove(playerSign: string) {
+        let nextPlayerSign: string = EMPTY;
+        if (playerSign === "X") {
+            nextPlayerSign = "O";
+        } else if (playerSign === "O") {
+            nextPlayerSign = "X";
+        }
+        return nextPlayerSign;
     }
 
     private findCenter(position: Position): Position {
@@ -167,6 +172,14 @@ export class RoomImpl implements IRoom {
     private isValidPosition(position: Position): boolean {
         const row = Number.parseInt(position.row + "", 10);
         const column = Number.parseInt(position.column + "", 10);
+
+        if (row < 0 || row >= 9) {
+            return false;
+        }
+        if (column < 0 || column >= 9) {
+            return false;
+        }
+
         return this.localBoard[row][column] === EMPTY;
     }
 
