@@ -17,7 +17,7 @@ export function registerRoute(app: Express) {
         func.joinRoom(request, response, game);
     });
 
-    app.delete("/room/:roomID/player/:playerID/leave", (request, response) => {
+    app.delete("/room/:roomID/player/:playerSign/leave", (request, response) => {
         func.leaveRoom(request, response, game);
     });
 
@@ -25,7 +25,7 @@ export function registerRoute(app: Express) {
         func.getRoomEventList(request, response, game);
     });
 
-    app.post("/room/:roomID/player/:playerID/move", (request, response) => {
+    app.post("/room/:roomID/player/:playerSign/move", (request, response) => {
         func.recordPlayerMove(request, response, game);
     });
 }

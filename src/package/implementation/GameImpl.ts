@@ -4,7 +4,7 @@ import { IRoom } from "../interface/IRoom";
 import { RoomImpl } from "./RoomImpl";
 import { CustomError } from "../utilities/CustomError";
 
-const MAXIMUM_JOIN_DURATION = 1 * 60 * 1000; // 1 min / sec * 60 sec / min * 1000 ms / sec
+const MAXIMUM_ROOM_LIFETIME = 1 * 24 * 60 * 60 * 1000; // 1 day * 24 hour / day * 60 minute / hour * 60 second / minute * 1000 ms / second
 
 export class GameImpl implements IGame {
     private rooms: Map<number, IRoom>;
@@ -23,7 +23,7 @@ export class GameImpl implements IGame {
         setTimeout(() => {
             this.rooms.delete(roomID);
             console.log("Room " + roomID + " is deleted!");
-        }, MAXIMUM_JOIN_DURATION);
+        }, MAXIMUM_ROOM_LIFETIME);
 
         return room;
     }

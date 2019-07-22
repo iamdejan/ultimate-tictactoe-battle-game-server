@@ -14,6 +14,7 @@ export function buildJoinRoomEvent(player: IPlayer): RoomEventWithData {
         player: {
             id: player.getID(),
             name: player.getName(),
+            sign: player.sign,
         },
     });
 }
@@ -23,6 +24,7 @@ export function buildLeaveRoomEvent(player: IPlayer): RoomEventWithData {
         player: {
             id: player.getID(),
             name: player.getName(),
+            sign: player.sign,
         },
     });
 }
@@ -46,6 +48,5 @@ export function buildWinLocalBoardGameEvent(playerSign: string, globalPosition: 
     return new RoomEventWithData(RoomEventTypeEnum.WIN_LOCAL_BOARD, {
         globalPosition: globalPosition,
         playerSign: playerSign,
-        sign: playerSign,
     });
 }
