@@ -200,8 +200,16 @@ export class RoomImpl implements IRoom {
 
                 this.fillFinishedLocalBoard(playerSign, center);
 
-                // TODO: check global board
+                this.evaluateGlobalBoard(playerSign, globalPosition);
             }
+        }
+    }
+
+    private evaluateGlobalBoard(playerSign: string, position: Position) {
+        const center: Position = this.findCenter(position);
+        const player = this.players.get(playerSign);
+        if (this.isWinningCondition(center) && player !== undefined) {
+            this.eventCenter.put(builder.buildGameEndEvent(player));
         }
     }
 
