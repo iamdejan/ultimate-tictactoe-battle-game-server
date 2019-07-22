@@ -48,6 +48,5 @@ export function buildWinLocalBoardGameEvent(playerSign: string, globalPosition: 
     return new RoomEventWithData(RoomEventTypeEnum.WIN_LOCAL_BOARD, {
         globalPosition: globalPosition,
         playerSign: playerSign,
-        sign: playerSign,
     });
 }
