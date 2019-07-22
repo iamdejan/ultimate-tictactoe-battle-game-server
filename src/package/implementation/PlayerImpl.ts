@@ -1,6 +1,8 @@
 import { IPlayer } from "../interface/IPlayer";
 
 export class PlayerImpl implements IPlayer {
+
+    public sign!: string;
     private id: number;
     private name: string;
 
@@ -16,4 +18,5 @@ export class PlayerImpl implements IPlayer {
     public getName(): string {
         return this.name;
     }
+
 }
