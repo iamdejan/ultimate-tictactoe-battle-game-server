@@ -124,47 +124,47 @@ export class RoomImpl implements IRoom {
         return new Position({ row, column });
     }
 
-    private isWinningCondition(center: Position): boolean {
+    private isWinningCondition(center: Position, board: string[][]): boolean {
         const row = center.row;
         const column = center.column;
 
-        if (this.localBoard[row - 1][column] === this.localBoard[row][column] && this.localBoard[row][column] === this.localBoard[row + 1][column]) {
-            if (this.localBoard[row][column] !== EMPTY) {
+        if (board[row - 1][column] === board[row][column] && board[row][column] === board[row + 1][column]) {
+            if (board[row][column] !== EMPTY) {
                 return true;
             }
         }
-        if (this.localBoard[row][column - 1] === this.localBoard[row][column] && this.localBoard[row][column] === this.localBoard[row][column + 1]) {
-            if (this.localBoard[row][column] !== EMPTY) {
+        if (board[row][column - 1] === board[row][column] && board[row][column] === board[row][column + 1]) {
+            if (board[row][column] !== EMPTY) {
                 return true;
             }
         }
-        if (this.localBoard[row - 1][column - 1] === this.localBoard[row][column] && this.localBoard[row][column] === this.localBoard[row + 1][column + 1]) {
-            if (this.localBoard[row][column] !== EMPTY) {
+        if (board[row - 1][column - 1] === board[row][column] && board[row][column] === board[row + 1][column + 1]) {
+            if (board[row][column] !== EMPTY) {
                 return true;
             }
         }
-        if (this.localBoard[row - 1][column + 1] === this.localBoard[row][column] && this.localBoard[row][column] === this.localBoard[row + 1][column - 1]) {
-            if (this.localBoard[row][column] !== EMPTY) {
+        if (board[row - 1][column + 1] === board[row][column] && board[row][column] === board[row + 1][column - 1]) {
+            if (board[row][column] !== EMPTY) {
                 return true;
             }
         }
-        if (this.localBoard[row - 1][column - 1] === this.localBoard[row - 1][column] && this.localBoard[row - 1][column] === this.localBoard[row - 1][column + 1]) {
-            if (this.localBoard[row - 1][column] !== EMPTY) {
+        if (board[row - 1][column - 1] === board[row - 1][column] && board[row - 1][column] === board[row - 1][column + 1]) {
+            if (board[row - 1][column] !== EMPTY) {
                 return true;
             }
         }
-        if (this.localBoard[row + 1][column - 1] === this.localBoard[row + 1][column] && this.localBoard[row + 1][column] === this.localBoard[row + 1][column + 1]) {
-            if (this.localBoard[row + 1][column] !== EMPTY) {
+        if (board[row + 1][column - 1] === board[row + 1][column] && board[row + 1][column] === board[row + 1][column + 1]) {
+            if (board[row + 1][column] !== EMPTY) {
                 return true;
             }
         }
-        if (this.localBoard[row - 1][column - 1] === this.localBoard[row][column - 1] && this.localBoard[row][column - 1] === this.localBoard[row + 1][column - 1]) {
-            if (this.localBoard[row][column - 1] !== EMPTY) {
+        if (board[row - 1][column - 1] === board[row][column - 1] && board[row][column - 1] === board[row + 1][column - 1]) {
+            if (board[row][column - 1] !== EMPTY) {
                 return true;
             }
         }
-        if (this.localBoard[row - 1][column + 1] === this.localBoard[row][column + 1] && this.localBoard[row][column + 1] === this.localBoard[row + 1][column + 1]) {
-            if (this.localBoard[row][column + 1] !== EMPTY) {
+        if (board[row - 1][column + 1] === board[row][column + 1] && board[row][column + 1] === board[row + 1][column + 1]) {
+            if (board[row][column + 1] !== EMPTY) {
                 return true;
             }
         }
@@ -186,7 +186,7 @@ export class RoomImpl implements IRoom {
     private evaluateLocalBoard(playerSign: string, position: Position) {
         const center: Position = this.findCenter(position);
 
-        if (this.isWinningCondition(center)) {
+        if (this.isWinningCondition(center, this.localBoard)) {
             const globalPosition: Position = center.clone();
             globalPosition.row--;
             globalPosition.row /= 3;
@@ -208,7 +208,7 @@ export class RoomImpl implements IRoom {
     private evaluateGlobalBoard(playerSign: string, position: Position) {
         const center: Position = this.findCenter(position);
         const player = this.players.get(playerSign);
-        if (this.isWinningCondition(center) && player !== undefined) {
+        if (this.isWinningCondition(center, this.globalBoard) && player !== undefined) {
             this.eventCenter.put(builder.buildGameEndEvent(player));
         }
     }
