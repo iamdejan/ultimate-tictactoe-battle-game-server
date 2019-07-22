@@ -2,8 +2,12 @@ export class Position {
     public row: number;
     public column: number;
 
-    constructor(row: number, column: number) {
-        this.row = row;
-        this.column = column;
+    constructor(data: { row: number, column: number }) {
+        this.row = data.row;
+        this.column = data.column;
+    }
+
+    public clone(): Position {
+        return new Position({ row: this.row, column: this.column });
     }
 }
