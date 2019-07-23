@@ -37,8 +37,9 @@ export function buildValidMoveGameEvent(playerSign: string, position: Position, 
     });
 }
 
-export function buildInvalidMoveGameEvent(playerSign: string, position: Position): RoomEventWithData {
+export function buildInvalidMoveGameEvent(playerSign: string, position: Position, nextPlayerSign: string): RoomEventWithData {
     return new RoomEventWithData(RoomEventTypeEnum.INVALID_MOVE, {
+        nextPlayerSign: nextPlayerSign,
         playerSign: playerSign,
         position: position,
     });

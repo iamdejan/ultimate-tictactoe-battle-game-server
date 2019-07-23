@@ -79,7 +79,7 @@ export class RoomImpl implements IRoom {
         const position: Position = new Position(positionData);
 
         if (this.isValidPosition(position) !== true) {
-            this.eventCenter.put(builder.buildInvalidMoveGameEvent(playerSign, position));
+            this.eventCenter.put(builder.buildInvalidMoveGameEvent(playerSign, position, this.decideNextPlayerToMove(playerSign)));
             return;
         }
 
@@ -95,12 +95,11 @@ export class RoomImpl implements IRoom {
         if (player !== undefined) {
             this.localBoard[row][column] = player.sign + "";
             const nextPlayerSign = this.decideNextPlayerToMove(playerSign);
-
             this.eventCenter.put(builder.buildValidMoveGameEvent(playerSign, position, nextPlayerSign));
         }
     }
 
-    private decideNextPlayerToMove(playerSign: string) {
+    private decideNextPlayerToMove(playerSign: string): string {
         let nextPlayerSign: string = EMPTY;
         if (playerSign === "X") {
             nextPlayerSign = "O";
