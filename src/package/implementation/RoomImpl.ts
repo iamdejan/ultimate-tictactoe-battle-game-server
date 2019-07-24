@@ -43,11 +43,7 @@ export class RoomImpl implements IRoom {
         }
 
         const player: IPlayer = new PlayerImpl(data.id, data.name);
-        if (this.isEmpty()) {
-            player.sign = "X";
-        } else {
-            player.sign = "O";
-        }
+        this.setSignToPlayer(player);
         this.players.set(player.sign, player);
         this.eventCenter.put(builder.buildJoinRoomEvent(player));
 
@@ -79,12 +75,20 @@ export class RoomImpl implements IRoom {
         const position: Position = new Position(positionData);
 
         if (this.isValidPosition(position) !== true) {
-            this.eventCenter.put(builder.buildInvalidMoveGameEvent(playerSign, position));
+            this.eventCenter.put(builder.buildInvalidMoveGameEvent(playerSign, position, this.decideOtherSign(playerSign)));
             return;
         }
 
         this.move(playerSign, position);
         this.evaluateLocalBoard(playerSign, position);
+    }
+
+    private setSignToPlayer(player: IPlayer) {
+        if (this.isEmpty()) {
+            player.sign = "X";
+        } else {
+            player.sign = "O";
+        }
     }
 
     private move(playerSign: string, position: Position): void {
@@ -94,13 +98,12 @@ export class RoomImpl implements IRoom {
         const player = this.players.get(playerSign);
         if (player !== undefined) {
             this.localBoard[row][column] = player.sign + "";
-            const nextPlayerSign = this.decideNextPlayerToMove(playerSign);
-
+            const nextPlayerSign = this.decideOtherSign(playerSign);
             this.eventCenter.put(builder.buildValidMoveGameEvent(playerSign, position, nextPlayerSign));
         }
     }
 
-    private decideNextPlayerToMove(playerSign: string) {
+    private decideOtherSign(playerSign: string): string {
         let nextPlayerSign: string = EMPTY;
         if (playerSign === "X") {
             nextPlayerSign = "O";
