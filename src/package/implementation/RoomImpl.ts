@@ -190,7 +190,7 @@ export class RoomImpl implements IRoom {
         const center: Position = this.findCenter(position);
 
         if (this.isWinningCondition(center, this.localBoard)) {
-            const globalPosition = this.convertToGlobalBoard(center);
+            const globalPosition = this.convertToGlobalPosition(center);
 
             if (this.players.has(playerSign)) {
                 this.globalBoard[globalPosition.row][globalPosition.column] = playerSign;
@@ -203,7 +203,7 @@ export class RoomImpl implements IRoom {
         }
     }
 
-    private convertToGlobalBoard(center: Position) {
+    private convertToGlobalPosition(center: Position) {
         const globalPosition: Position = center.clone();
         globalPosition.row--;
         globalPosition.row /= 3;
