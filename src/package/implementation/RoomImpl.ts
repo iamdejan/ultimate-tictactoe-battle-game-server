@@ -72,6 +72,9 @@ export class RoomImpl implements IRoom {
             throw new CustomError("Player is not found!", 404);
         }
 
+        console.log("Board:");
+        this.printLocalBoard();
+
         const position: Position = new Position(positionData);
 
         if (this.isValidPosition(position) !== true) {
@@ -81,6 +84,16 @@ export class RoomImpl implements IRoom {
 
         this.move(playerSign, position);
         this.evaluateLocalBoard(playerSign, position);
+    }
+
+    private printLocalBoard() {
+        for (let i = 0; i < 9; i++) {
+            let row: string = "";
+            for (let j = 0; j < 9; j++) {
+                row += this.localBoard[i][j] + " ";
+            }
+            console.log(row);
+        }
     }
 
     private setSignToPlayer(player: IPlayer) {
@@ -128,6 +141,8 @@ export class RoomImpl implements IRoom {
     }
 
     private isWinningCondition(center: Position, board: string[][]): boolean {
+        console.log("Winning condition? Center:");
+        console.log(center);
         const row = center.row;
         const column = center.column;
 
@@ -176,11 +191,11 @@ export class RoomImpl implements IRoom {
     }
 
     private fillFinishedLocalBoard(playerSign: string, center: Position) {
-        for (let i = center.row - 1; i < 3; i++) {
+        for (let i = -1; i <= 1; i++) {
             let row: string = "";
-            for (let j = center.column - 1; j < 3; j++) {
-                this.localBoard[i][j] = playerSign;
-                row += this.localBoard[i][j] + " ";
+            for (let j = -1; j <= 1; j++) {
+                this.localBoard[i + center.row][j + center.column] = playerSign;
+                row += this.localBoard[i + center.row][j + center.column] + " ";
             }
             console.log(row);
         }
