@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
-import { IGame } from "../interface/IGame";
-import { IRoom } from "../interface/IRoom";
-import { GeneralResponse } from "../utilities/GeneralResponse";
-import { CustomError } from "../utilities/CustomError";
+import {Request, Response} from "express";
+import {IGame} from "../interface/IGame";
+import {IRoom} from "../interface/IRoom";
+import {GeneralResponse} from "../utilities/GeneralResponse";
+import {CustomError} from "../utilities/CustomError";
 
 export async function createRoom(request: Request, response: Response, game: IGame) {
     const result: GeneralResponse = new GeneralResponse();
@@ -84,8 +84,7 @@ export async function getRoomEventList(request: Request, response: Response, gam
     const result: GeneralResponse = new GeneralResponse();
     try {
         const room: IRoom = game.getRoom(request.params.roomID);
-        const data = await untilEventExists(room, request.params.lastID);
-        result.DTO = data;
+        result.DTO = await untilEventExists(room, request.params.lastID);
         result.success = true;
     } catch (error) {
         result.DTO = {};
